@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "服务接力交接包",
+  "description": "一次旅次中，平台交给某个服务方的最小必要资料包。包内只允许出现目录矩阵为该环节列出的资料分组。",
+  "type": "object",
+  "required": [
+    "package_id",
+    "trip_relay_id",
+    "stage_id",
+    "provider_id",
+    "consent_id",
+    "groups",
+    "issued_at",
+    "expires_at",
+    "status"
+  ],
+  "properties": {
+    "package_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trip_relay_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "逐次旅次的匿名接力编号，不是游客身份标识"
+    },
+    "stage_id": {
+      "type": "string",
+      "enum": [
+        "visa_consult",
+        "document_check",
+        "payment_setup",
+        "transfer",
+        "reception"
+      ]
+    },
+    "provider_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "consent_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "本次交接所依据的游客明确授权编号"
+    },
+    "groups": {
+      "type": "object",
+      "description": "键必须是该环节矩阵允许的资料分组名；值是该组的字段子集",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "整包到期时刻，取包内敏感分组最早到期时间"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "narrowed",
+        "revoked",
+        "expired",
+        "superseded"
+      ]
+    },
+    "narrowing_reason": {
+      "type": "string",
+      "description": "status 为 narrowed/revoked 时说明触发收窄或撤回的事件"
+    }
+  },
+  "additionalProperties": false
+}
